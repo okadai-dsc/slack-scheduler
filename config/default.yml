@@ -1,0 +1,3 @@
+# config
+# 開発時は development.yml を作成する
+template: 'apple'

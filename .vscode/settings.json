@@ -1,0 +1,8 @@
+{
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.indentSize": 2,
+  "files.eol": "\n",
+  "files.encoding": "utf8"
+}

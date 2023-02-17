@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "donjayamanne.githistory",
+    "seatonjiang.gitmoji-vscode",
+    "simonsiefke.svg-preview",
+    "dbaeumer.vscode-eslint"
+  ]
+}

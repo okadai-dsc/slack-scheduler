@@ -1,0 +1,39 @@
+{
+  "name": "ts-app-template",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "OctSquid",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node --files -r tsconfig-paths/register src/app.ts",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --files -r tsconfig-paths/register --respawn ./src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --cache src",
+    "format": "prettier --ignore-unknown --write ."
+  },
+  "dependencies": {
+    "config": "^3.3.9",
+    "dotenv": "^16.0.3",
+    "log4js": "^6.7.1",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@types/config": "^3.3.0",
+    "@types/eslint": "^8.21.0",
+    "@types/node": "^18.14.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.4",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.2",
+    "tsconfig-paths": "^4.1.2",
+    "typescript": "^4.9.5",
+    "typescript-transform-paths": "^3.4.6"
+  }
+}

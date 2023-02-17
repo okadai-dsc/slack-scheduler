@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "typeRoots": ["./src/types"],
+    "incremental": true,
+    "types": ["node"],
+    "declaration": true,
+    "paths": {
+      "*": ["node_modules/*"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
