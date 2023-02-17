@@ -17,6 +17,8 @@
     "incremental": true,
     "types": ["node"],
     "declaration": true,
+    "jsx": "react-jsxdev",
+    "jsxImportSource": "jsx-slack",
     "paths": {
       "*": ["node_modules/*"],
       "@/*": ["src/*"]
