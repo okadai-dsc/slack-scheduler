@@ -1,3 +1,4 @@
 # config
 # 開発時は development.yml を作成する
-template: 'apple'
+token: 'xoxb-000000000000000000000000000000000000000'
+signingSecret: '00000000000000000000000000000'
