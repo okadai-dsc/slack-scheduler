@@ -2002,6 +2002,13 @@ jsonwebtoken@^9.0.0:
     ms "^2.1.1"
     semver "^7.3.8"
 
+jsx-slack@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/jsx-slack/-/jsx-slack-5.3.0.tgz#d162051076f9243da56fa18e191117963cc89f2d"
+  integrity sha512-xPYP8zLO31AKYiyuDJ88ykJzV/GvZUK+ktM4xE6ESIzrCICSd8nhrW/yaSyX45U+oD5LNTDUnhJvQe0LFDi63g==
+  dependencies:
+    "@slack/types" "^2.7.0"
+
 jwa@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jwa/-/jwa-1.4.1.tgz#743c32985cb9e98655530d53641b66c8645b039a"
