@@ -1,4 +1,3 @@
-import { dateToString } from './utils/dateToString';
 import { CreateEventModal } from './views/CreateEventModal';
 import { ScheduleNotifyBlocks } from './views/ScheduleNotifyBlocks';
 import { App } from '@slack/bolt';

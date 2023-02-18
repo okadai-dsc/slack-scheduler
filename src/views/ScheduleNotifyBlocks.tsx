@@ -1,5 +1,5 @@
 import { dateToString } from '@/utils/dateToString';
-import JSXSlack, {
+import {
   Actions,
   Blocks,
   Button,
