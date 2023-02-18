@@ -1,5 +1,9 @@
 import { CreateEventModal } from './views/CreateEventModal';
-import { ScheduleNotifyBlocks } from './views/ScheduleNotifyBlocks';
+import {
+  LocationType,
+  LocationTypes,
+  ScheduleNotifyBlocks,
+} from './views/ScheduleNotifyBlocks';
 import { App } from '@slack/bolt';
 import config from 'config';
 import JSXSlack from 'jsx-slack';
@@ -26,6 +30,7 @@ app.shortcut('create_event', async ({ shortcut, ack, context }) => {
 });
 
 interface SelectDateTimeValue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [prop: string]: any;
 }
 
@@ -44,6 +49,22 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
   const shareWith = values['shareWith']['shareWith']
     .selected_conversations as string[];
 
+  let location_type: LocationType = LocationTypes.Location;
+
+  if (location.includes('部室')) {
+    // 部室
+    location_type = LocationTypes.Location;
+  } else if (location.match('https://.*zoom.us/j') != null) {
+    // zoom
+    location_type = LocationTypes.Zoom;
+  } else if (location.match('https://.*zoom.us/skype')) {
+    // skype for business
+    location_type = LocationTypes.Skype;
+  } else if (location.match('https://teams.microsoft.com/l/')) {
+    // microsoft teams
+    location_type = LocationTypes.Teams;
+  }
+
   shareWith.forEach((id) => {
     return client.chat.postMessage({
       channel: id,
@@ -53,6 +74,7 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
           title: title,
           description: description,
           location: location,
+          locationType: location_type,
           startDateTime: startDateTime,
           duration: duration,
           author: body.user.id,
