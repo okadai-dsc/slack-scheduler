@@ -2,14 +2,18 @@ import { CreateEventModal } from './views/CreateEventModal';
 import { ScheduleNotifyBlocks } from './views/ScheduleNotifyBlocks';
 import { App } from '@slack/bolt';
 import config from 'config';
+import * as dotenv from 'dotenv';
 import JSXSlack from 'jsx-slack';
 import { AddressInfo } from 'net';
 
+dotenv.config();
+
 const app = new App({
-  token: config.get('slack.token'),
-  signingSecret: config.get('slack.signingSecret'),
+  token: process.env.SLACK_TOKEN || config.get('slack.token'),
+  signingSecret: process.env.SLACK_SECRET || config.get('slack.signingSecret'),
 });
 
+// 「予定を作成」ショートカットが実行された
 app.shortcut('create_event', async ({ shortcut, ack, context }) => {
   ack();
 
@@ -25,14 +29,17 @@ app.shortcut('create_event', async ({ shortcut, ack, context }) => {
   }
 });
 
+// 型がないためコンパイルエラー回避
 interface SelectDateTimeValue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [prop: string]: any;
 }
 
+// 「予定を作成」モーダルが送信された
 app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
   await ack();
 
+  // valueを取得
   const values = view.state.values;
   const title = values['title']['title'].value as string;
   const description = values['description']['description'].value as string;
@@ -51,11 +58,13 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
     // 部室
   }
 
+  // プロフィールの取得
   const profile = await client.users.profile.get({
     user: body.user.id,
-    token: config.get('slack.token'),
+    token: process.env.SLACK_TOKEN || config.get('slack.token'),
   });
 
+  // 予定を送信
   shareWith.forEach((id) => {
     return client.chat.postMessage({
       username: profile.profile?.display_name || profile.profile?.first_name,
