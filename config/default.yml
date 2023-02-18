@@ -1,4 +1,7 @@
 # config
 # 開発時は development.yml を作成する
-token: 'xoxb-000000000000000000000000000000000000000'
-signingSecret: '00000000000000000000000000000'
+slack:
+  token: 'xoxb-000000000000000000000000000000000000000'
+  signingSecret: '00000000000000000000000000000'
+  # 予定の投稿をするチャンネルID
+  notifyChannelID: 'xxxxxxxxx'
