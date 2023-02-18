@@ -10,9 +10,15 @@ import {
 } from 'jsx-slack';
 
 export const CreateEventModal = () => (
-  <Modal title='予定を作成' submit='作成' close='キャンセル'>
-    <Input type='text' name='title' label='タイトル' required />
+  <Modal
+    callbackId='create_event_modal'
+    title='予定を作成'
+    submit='作成'
+    close='キャンセル'
+  >
+    <Input type='text' id='title' name='title' label='タイトル' required />
     <Textarea
+      id='description'
       name='description'
       label='説明'
       required
@@ -22,6 +28,7 @@ export const CreateEventModal = () => (
 
     <Input
       type='text'
+      id='location'
       name='location'
       label='場所'
       required
@@ -30,13 +37,14 @@ export const CreateEventModal = () => (
     />
 
     <DateTimePicker
+      id='startDateTime'
       name='startDateTime'
       label='開始日時'
       required
       initialDateTime={Date.now()}
     />
 
-    <Select name='duration' label='期間' value='60' required>
+    <Select id='duration' name='duration' label='期間' value='60' required>
       <Option value='15'>15 分</Option>
       <Option value='30'>30 分</Option>
       <Option value='45'>45 分</Option>
@@ -46,6 +54,7 @@ export const CreateEventModal = () => (
     </Select>
 
     <ConversationsSelect
+      id='shareWith'
       name='shareWith'
       label='共有先'
       placeholder='予定を送信する先を選択してください'
