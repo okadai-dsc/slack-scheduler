@@ -31,8 +31,16 @@ export const CreateEventModal = () => (
       id='location'
       name='location'
       label='場所'
-      required
-      placeholder='場所、またはZoomリンクを入力してください'
+      placeholder='オンラインのみの場合記入不要です'
+      maxLength={100}
+    />
+
+    <Input
+      type='text'
+      id='meetingUrl'
+      name='meetingUrl'
+      label='オンライン会議URL'
+      placeholder='Zoom,Teamsなどのリンクが利用可能です'
       maxLength={100}
     />
 

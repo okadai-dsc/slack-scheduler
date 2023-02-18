@@ -67,11 +67,6 @@ export const ScheduleNotifyBlocks = (props: ScheduleNotifyProps) => (
     <Header>
       <b>⚡{props.title}</b>
     </Header>
-    <Context>
-      <Mrkdwn raw verbatim>
-        by {`<@${props.author}>`}
-      </Mrkdwn>
-    </Context>
     <Divider />
     <Section>
       <Mrkdwn raw verbatim>
@@ -84,7 +79,14 @@ export const ScheduleNotifyBlocks = (props: ScheduleNotifyProps) => (
         {'📝 *内容* \n' + props.description}
       </Mrkdwn>
     </Section>
-    <Button>✨カレンダーに追加</Button>
+    {/* <Context>
+      <Mrkdwn raw verbatim>
+        by {`<@${props.author}>`}
+      </Mrkdwn>
+    </Context> */}
     <Divider />
+    <Actions>
+      <Button>✨カレンダーに追加</Button>
+    </Actions>
   </Blocks>
 );

@@ -65,8 +65,15 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
     location_type = LocationTypes.Teams;
   }
 
+  const profile = await client.users.profile.get({
+    user: body.user.id,
+    token: config.get('slack.token'),
+  });
+
   shareWith.forEach((id) => {
     return client.chat.postMessage({
+      username: profile.profile?.display_name || profile.profile?.first_name,
+      icon_url: profile.profile?.image_192,
       channel: id,
       text: ' ',
       blocks: JSXSlack(
@@ -80,6 +87,8 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
           author: body.user.id,
         }),
       ),
+      // footer_icon: `${profile.profile?.image_72}`,
+      // footer: `Created by ${body.user.name}`,
     });
   });
   console.log(description);
