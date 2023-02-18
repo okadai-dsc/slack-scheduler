@@ -1,9 +1,6 @@
+import { dateToString } from './utils/dateToString';
 import { CreateEventModal } from './views/CreateEventModal';
-import {
-  LocationType,
-  LocationTypes,
-  ScheduleNotifyBlocks,
-} from './views/ScheduleNotifyBlocks';
+import { ScheduleNotifyBlocks } from './views/ScheduleNotifyBlocks';
 import { App } from '@slack/bolt';
 import config from 'config';
 import JSXSlack from 'jsx-slack';
@@ -36,10 +33,12 @@ interface SelectDateTimeValue {
 
 app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
   await ack();
+
   const values = view.state.values;
   const title = values['title']['title'].value as string;
   const description = values['description']['description'].value as string;
-  const location = values['location']['location'].value as string;
+  const location = values['location']['location'].value;
+  const meetingUrl = values['meetingUrl']['meetingUrl'].value;
   const startDateTime = (
     values['startDateTime']['startDateTime'] as SelectDateTimeValue
   ).selected_date_time as number;
@@ -49,20 +48,8 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
   const shareWith = values['shareWith']['shareWith']
     .selected_conversations as string[];
 
-  let location_type: LocationType = LocationTypes.Location;
-
-  if (location.includes('部室')) {
+  if (location && location.includes('部室')) {
     // 部室
-    location_type = LocationTypes.Location;
-  } else if (location.match('https://.*zoom.us/j') != null) {
-    // zoom
-    location_type = LocationTypes.Zoom;
-  } else if (location.match('https://.*zoom.us/skype')) {
-    // skype for business
-    location_type = LocationTypes.Skype;
-  } else if (location.match('https://teams.microsoft.com/l/')) {
-    // microsoft teams
-    location_type = LocationTypes.Teams;
   }
 
   const profile = await client.users.profile.get({
@@ -80,15 +67,15 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
         ScheduleNotifyBlocks({
           title: title,
           description: description,
-          location: location,
-          locationType: location_type,
+          location: location ? location : null,
+          meetingUrls: meetingUrl
+            ? meetingUrl.split(',').filter((v) => v != '')
+            : [],
           startDateTime: startDateTime,
           duration: duration,
           author: body.user.id,
         }),
       ),
-      // footer_icon: `${profile.profile?.image_72}`,
-      // footer: `Created by ${body.user.name}`,
     });
   });
   console.log(description);

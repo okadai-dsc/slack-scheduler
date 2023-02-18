@@ -1,65 +1,60 @@
 import { dateToString } from '@/utils/dateToString';
-import {
+import JSXSlack, {
   Actions,
   Blocks,
   Button,
-  Context,
   Divider,
   Header,
   Mrkdwn,
   Section,
 } from 'jsx-slack';
 
-export const LocationTypes = {
-  Location: 'location',
-  Zoom: 'zoom',
-  Skype: 'skype',
-  Teams: 'teams',
-} as const;
-
-export type LocationType = (typeof LocationTypes)[keyof typeof LocationTypes];
-
 type ScheduleNotifyProps = {
   title: string;
   description: string;
-  location: string;
-  locationType: LocationType;
+  location: string | null;
+  meetingUrls: string[];
   startDateTime: number;
   duration: number;
   author: string;
 };
 
-const locationSection = (type: LocationType, location: string) => {
-  switch (type) {
-    case LocationTypes.Location:
+const meetingSection = (urls: string[]) => {
+  if (urls.length < 0) return null;
+  return urls.map((url) => {
+    if (url.match('https://.*zoom.us/j') != null) {
+      // zoom
       return (
         <Section>
-          <b>📍 場所</b> <br />
-          {location}
+          <b>🎦 Zoom</b> <br />
+          <a href={url}>会議に参加</a>
         </Section>
       );
-    case LocationTypes.Zoom:
+    } else if (url.match('https://.*zoom.us/skype')) {
+      // skype
       return (
         <Section>
-          <b>🎦 Zoom 開催</b> <br />
-          <a href={location}>{location}</a>
+          <b>☁️ Skype</b> <br />
+          <a href={url}>会議に参加</a>
         </Section>
       );
-    case LocationTypes.Skype:
+    } else if (url.match('https://teams.microsoft.com/')) {
+      // microsoft teams
       return (
         <Section>
-          <b>☁️ Skype 開催</b> <br />
-          <a href={location}>{location}</a>
+          <b>🙍‍♀️ Teams</b> <br />
+          <a href={url}>会議に参加</a>
         </Section>
       );
-    case LocationTypes.Teams:
+    } else {
       return (
         <Section>
-          <b>🙍‍♀️ Teams 開催</b> <br />
-          <a href={location}>{location}</a>
+          <b>💻 オンラインミーティング</b> <br />
+          <Button url={url}>会議に参加</Button>
         </Section>
       );
-  }
+    }
+  });
 };
 
 export const ScheduleNotifyBlocks = (props: ScheduleNotifyProps) => (
@@ -73,7 +68,13 @@ export const ScheduleNotifyBlocks = (props: ScheduleNotifyProps) => (
         {'📆 *日時* \n' + dateToString(props.startDateTime, props.duration)}
       </Mrkdwn>
     </Section>
-    {locationSection(props.locationType, props.location)}
+    {props.location ? (
+      <Section>
+        <b>📍 場所</b> <br />
+        <p>{props.location}</p>
+      </Section>
+    ) : null}
+    {meetingSection(props.meetingUrls)}
     <Section>
       <Mrkdwn raw verbatim>
         {'📝 *内容* \n' + props.description}
@@ -84,9 +85,9 @@ export const ScheduleNotifyBlocks = (props: ScheduleNotifyProps) => (
         by {`<@${props.author}>`}
       </Mrkdwn>
     </Context> */}
-    <Divider />
     <Actions>
       <Button>✨カレンダーに追加</Button>
     </Actions>
+    <Divider />
   </Blocks>
 );

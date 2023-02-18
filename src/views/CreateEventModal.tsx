@@ -22,7 +22,7 @@ export const CreateEventModal = () => (
       name='description'
       label='説明'
       required
-      placeholder='予定についてもう少し詳しく説明してください。マークダウン記法が使用可能です！'
+      placeholder='予定について詳しく説明してください。マークダウン記法が使用可能です！'
       maxLength={500}
     />
 
@@ -31,7 +31,7 @@ export const CreateEventModal = () => (
       id='location'
       name='location'
       label='場所'
-      placeholder='オンラインのみの場合記入不要です'
+      placeholder='場所を記入してください'
       maxLength={100}
     />
 
@@ -41,7 +41,7 @@ export const CreateEventModal = () => (
       name='meetingUrl'
       label='オンライン会議URL'
       placeholder='Zoom,Teamsなどのリンクが利用可能です'
-      maxLength={100}
+      maxLength={400}
     />
 
     <DateTimePicker
