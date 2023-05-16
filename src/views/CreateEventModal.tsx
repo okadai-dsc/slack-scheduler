@@ -69,7 +69,10 @@ export const CreateEventModal = () => (
       required
       multiple
       include={['public', 'im', 'mpim']}
-      initialConversation={[config.get('slack.notifyChannelID'), 'current']}
+      initialConversation={[
+        process.env.NOTIFY_CHANNEL_ID || config.get('slack.notifyChannelID'),
+        'current',
+      ]}
       excludeBotUsers
     />
   </Modal>
