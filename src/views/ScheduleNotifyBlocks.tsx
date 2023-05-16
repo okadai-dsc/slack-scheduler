@@ -10,13 +10,29 @@ import {
 } from 'jsx-slack';
 
 type ScheduleNotifyProps = {
+  /** タイトル */
   title: string;
+
+  /** 予定の詳細 */
   description: string;
+
+  /** 開催場所 */
   location: string | null;
+
+  /** オンラインミーティングURL */
   meetingUrls: string[];
+
+  /** 開始時刻 */
   startDateTime: number;
+
+  /** 開催期間(分) */
   duration: number;
+
+  /** 予定の作成者 */
   author: string;
+
+  /** icsファイルのダウンロードURL */
+  icsUrl: string;
 };
 
 const meetingSection = (urls: string[]) => {
@@ -86,7 +102,7 @@ export const ScheduleNotifyBlocks = (props: ScheduleNotifyProps) => (
       </Mrkdwn>
     </Context> */}
     <Actions>
-      <Button>✨カレンダーに追加</Button>
+      <Button url={props.icsUrl}>✨カレンダーに追加</Button>
     </Actions>
     <Divider />
   </Blocks>
