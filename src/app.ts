@@ -5,6 +5,7 @@ import { App } from '@slack/bolt';
 import config from 'config';
 import { format } from 'date-fns';
 import * as dotenv from 'dotenv';
+import http from 'http';
 import JSXSlack from 'jsx-slack';
 import { AddressInfo } from 'net';
 
@@ -14,6 +15,9 @@ const app = new App({
   token: process.env.SLACK_TOKEN || config.get('slack.token'),
   signingSecret: process.env.SLACK_SECRET || config.get('slack.signingSecret'),
 });
+
+// uptime 用サーバー
+const server = http.createServer();
 
 // 「予定を作成」ショートカットが実行された
 app.shortcut('create_event', async ({ shortcut, ack, context }) => {
@@ -107,13 +111,24 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
   console.log(description);
 });
 
+server.on('request', function (req, res) {
+  if (req.method === 'GET') {
+    res.statusCode = 200;
+    res.end('HTTP: OK');
+  }
+});
+
 // Start your app
 (async () => {
-  const server = await app.start(process.env.PORT || 3000);
+  const appServer = await app.start(process.env.PORT || 3000);
+
+  server.listen(8080, () => {
+    console.log('⚡️ Keep-Alive server is running!');
+  });
 
   console.log(
     `⚡️ Bolt app is running! Server port: ${
-      (server.address() as AddressInfo).port
+      (appServer.address() as AddressInfo).port
     }`,
   );
 })();
