@@ -1,7 +1,9 @@
+import { generateIcs } from './utils/generateIcs';
 import { CreateEventModal } from './views/CreateEventModal';
 import { ScheduleNotifyBlocks } from './views/ScheduleNotifyBlocks';
 import { App } from '@slack/bolt';
 import config from 'config';
+import { format } from 'date-fns';
 import * as dotenv from 'dotenv';
 import JSXSlack from 'jsx-slack';
 import { AddressInfo } from 'net';
@@ -54,38 +56,54 @@ app.view('create_event_modal', async ({ ack, view, client, logger, body }) => {
   const shareWith = values['shareWith']['shareWith']
     .selected_conversations as string[];
 
-  if (location && location.includes('部室')) {
-    // 部室
-  }
-
   // プロフィールの取得
   const profile = await client.users.profile.get({
     user: body.user.id,
     token: process.env.SLACK_TOKEN || config.get('slack.token'),
   });
 
-  // 予定を送信
-  shareWith.forEach((id) => {
-    return client.chat.postMessage({
-      username: profile.profile?.display_name || profile.profile?.first_name,
-      icon_url: profile.profile?.image_192,
-      channel: id,
-      text: ' ',
-      blocks: JSXSlack(
-        ScheduleNotifyBlocks({
-          title: title,
-          description: description,
-          location: location ? location : null,
-          meetingUrls: meetingUrl
-            ? meetingUrl.split(',').filter((v) => v != '')
-            : [],
-          startDateTime: startDateTime,
-          duration: duration,
-          author: body.user.id,
-        }),
-      ),
-    });
+  const ics = await generateIcs(
+    startDateTime,
+    duration,
+    title,
+    description,
+    location ? location : undefined,
+    meetingUrl ? meetingUrl.split(',').filter((v) => v != '')[0] : undefined,
+  );
+
+  const file = await client.files.upload({
+    channels: process.env.FILE_CHANNEL_ID || config.get('slack.fileChannelID'),
+    filename: `${format(Date.now(), 'yyyyMMddHHmmssSSS')}-${title}.ics`,
+    filetype: 'ics',
+    content: ics,
   });
+
+  await Promise.all(
+    shareWith.map(async (id) => {
+      await client.chat.postMessage({
+        username: profile.profile?.display_name || profile.profile?.first_name,
+        icon_url: profile.profile?.image_192,
+        channel: id,
+        text: ' ',
+        blocks: JSXSlack(
+          ScheduleNotifyBlocks({
+            title: title,
+            description: description,
+            location: location ? location : null,
+            meetingUrls: meetingUrl
+              ? meetingUrl.split(',').filter((v) => v != '')
+              : [],
+            startDateTime: startDateTime,
+            duration: duration,
+            author: body.user.id,
+            icsUrl: file.file?.permalink
+              ? file.file?.permalink
+              : 'http://undefined.com',
+          }),
+        ),
+      });
+    }),
+  );
   console.log(description);
 });
 
