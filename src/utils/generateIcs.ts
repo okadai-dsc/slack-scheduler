@@ -20,15 +20,16 @@ export const generateIcs = async (
   location?: string,
   url?: string,
 ): Promise<string> => {
-  const date = DateTime.fromSeconds(startDateTime);
-  const localdate = date.setZone('Asia/Tokyo');
+  const date = DateTime.fromSeconds(startDateTime).setZone('utc');
   const event: ics.EventAttributes = {
+    startInputType: 'utc',
+    startOutputType: 'utc',
     start: [
-      Number(localdate.year),
-      Number(localdate.month),
-      Number(localdate.day),
-      Number(localdate.hour),
-      Number(localdate.minute),
+      Number(date.year),
+      Number(date.month),
+      Number(date.day),
+      Number(date.hour),
+      Number(date.minute),
     ] as [number, number, number, number, number],
     duration: { hours: Math.floor(duration / 60), minutes: duration % 60 },
     title: title,
